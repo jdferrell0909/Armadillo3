@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-const { json } = require("express");
-const priceTrackerDB = require("../models/priceTrackerModel.js");
-const getProductInfo = require("../utils/productWebscraping.js");
-=======
 const priceTrackerDB = require('../models/priceTrackerModel.js');
 const getProductInfo = require('../utils/productWebscraping.js');
->>>>>>> main
 
 const productController = {};
 
@@ -36,30 +30,6 @@ productController.getProducts = (req, res, next) => {
     });
 };
 
-productController.getPriceHistory = (req, res, next) => {
-  const queryForPriceHistory = `SELECT lowest_daily_price, timestamp
-  FROM products
-  JOIN lowest_daily_price ON lowest_daily_price.product_id=products._id
-  WHERE lowest_daily_price.product_id=$1
-  ORDER BY lowest_daily_price.timestamp DESC;`;
-
-  let values = [req.params.id];
-
-  priceTrackerDB
-    .query(queryForPriceHistory, values)
-    .then((data) => {
-      console.log("data rows in product controller:  " + JSON.stringify(data.rows))
-      res.locals.priceHistory = data.rows
-      return next()
-    })
-    .catch((err) => {
-      console.log(err);
-      return next(
-        res.status(400).send("ERROR in getPriceHistory controller: " + err)
-      );
-    });
-
-}
 productController.updateTimestamp = (req, res, next) => {
   console.log(req);
   console.log('type of yesterday', typeof yesterday);
@@ -71,11 +41,7 @@ productController.updateTimestamp = (req, res, next) => {
   priceTrackerDB
     .query(timestampQuery)
     .then((data) => {
-<<<<<<< HEAD
-      console.log("update timestamp data", data);
-=======
       console.log('update timestamp data', data.rows);
->>>>>>> main
       res.locals.currentproducts = data.rows;
       return next();
     })
