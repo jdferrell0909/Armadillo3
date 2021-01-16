@@ -5,6 +5,12 @@ const productController = require("../controllers/ProductControllers");
 
 //Product Routers:
 
+productRouter.get(
+  "/products/priceHistory/:id",
+  productController.getPriceHistory,
+  (req, res) => {
+    res.status(200).json({ priceHistory: res.locals.priceHistory });
+  })
 //Update the daily price for all products in database
 //GET request
 productRouter.get(
