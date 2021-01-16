@@ -1,28 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import NavBar from "./nav/NavBar";
 import ProductList from "./product/ProductList";
+import ProductInfo from "./product/ProductInfo";
 import Search from "./search/Search";
 import Spinner from "./search/Spinner";
 import ScrollTop from "./product/ScrollTop";
-import { Grid, Fab } from "@material-ui/core";
+import { Grid, Fab, Dialog, Paper } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import schedule from "node-schedule";
-
-const scheduleDailyCheck = schedule.scheduleJob("0 * * *", function () {
-  console.log("scheduler called");
-  var yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  console.log("yesterday", yesterday);
-  fetch(`/api/products/updatePricing`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .then(({ updated }) => console.log("scheduler completed", updated))
-    .catch((err) => console.log(err));
-});
 
 const Main = ({ email, logOut, userId }) => {
   const postObj = useRef({});
@@ -32,6 +16,9 @@ const Main = ({ email, logOut, userId }) => {
   const [fetchProduct, setFetch] = useState(false);
   const [productId, setProductId] = useState(null);
   const [spinner, setSpinner] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [boxProductId, setBoxProductId] = useState(null);
+  const [boxData, setBoxData] = useState([]);
 
   const startSpinner = () => {
     console.log("spinner heard");
@@ -40,7 +27,6 @@ const Main = ({ email, logOut, userId }) => {
 
   //get all products from db
   const getAllProducts = () => {
-    console.log("inside getAllProducts");
     fetch(`/api/products/${userId}`, {
       method: "GET",
       headers: {
@@ -52,6 +38,21 @@ const Main = ({ email, logOut, userId }) => {
       .catch((err) => console.log(err));
   };
 
+  const getPriceHistory = () => {
+    fetch(`/api/products/priceHistory/${boxProductId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(({ priceHistory }) => {
+        setBoxData(priceHistory);
+        console.log(priceHistory);
+      })
+      .catch((err) => console.log(err));
+  };
+
   //add product to userList
   const addProduct = (stateObj) => {
     Object.assign(postObj.current, stateObj);
@@ -60,6 +61,16 @@ const Main = ({ email, logOut, userId }) => {
 
   //delete product from userList
   const deleteProduct = (productId) => setProductId(productId);
+
+  //open dialog w/ exapnded info
+  const openDialogBox = () => {
+    setInfoOpen(true);
+  };
+  const handleInfoClose = () => {
+    setBoxData([]);
+    setInfoOpen(false);
+  };
+  // const setBoxId = (id) => setBoxProductId(id)
 
   //useEffect: userId/CDM
   useEffect(() => {
@@ -78,7 +89,6 @@ const Main = ({ email, logOut, userId }) => {
     const lowest_daily_price = postObj.current.productPrice;
     const product_id = postObj.current.productId;
     const date = postObj.current.date;
-    const stores = postObj.current.stores
 
     console.log("track button heard");
 
@@ -97,7 +107,6 @@ const Main = ({ email, logOut, userId }) => {
         lowest_daily_price,
         product_id,
         date,
-        stores,
       }),
     })
       .then((res) => res.json())
@@ -141,6 +150,12 @@ const Main = ({ email, logOut, userId }) => {
     setProductId(null);
   }, [productId]);
 
+  //update data for Info box
+  useEffect(() => {
+    if (!infoOpen) return;
+    getPriceHistory();
+  }, [infoOpen]);
+
   if (spinner) return <Spinner />;
 
   return (
@@ -172,9 +187,19 @@ const Main = ({ email, logOut, userId }) => {
           md={10}
           xl={9}
         >
-          <ProductList list={list} deleteProduct={deleteProduct} />
+          <ProductList
+            list={list}
+            deleteProduct={deleteProduct}
+            openInfo={openDialogBox}
+            setBoxProductId={setBoxProductId}
+          />
         </Grid>
       </Grid>
+      <Paper>
+        <Dialog open={infoOpen} onClose={handleInfoClose}>
+          <ProductInfo boxData={boxData} />
+        </Dialog>
+      </Paper>
       <ScrollTop>
         <Fab color="primary" size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon />
