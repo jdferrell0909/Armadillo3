@@ -77,7 +77,7 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
       // .then((response) => response.json())
       .then((response) => {
         const goodUrl = "google.com/shopping/product/";
-        console.log(response.data);
+        console.log("response:", response.data);
         const items = response.data.shopping_results;
         // .filter((item) => {
         //   return item.link.includes(goodUrl);
@@ -167,10 +167,19 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
     </Dialog>
   ) : (
     <>
-      <Grid container spacing={3}>
-        <Grid item xs={10} justify="center">
+      <Grid
+        container
+        spacing={3}
+        align="center"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item xs={10}>
           <form onSubmit={handleSubmit}>
             <TextField
+              align="right"
+              justify="right"
+              alignItems="right"
               id="search_bar"
               className={classes.searchBar}
               variant="outlined"
@@ -181,7 +190,7 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
             />
           </form>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={6} justify="left">
           <Button
             className={classes.searchBtn}
             id="search_btn"
@@ -193,7 +202,6 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
             Search
           </Button>
         </Grid>
-
         <Grid item xs={12}>
           <FormControl component="fieldset" m={2}>
             <FormLabel component="legend">Select Stores:</FormLabel>
