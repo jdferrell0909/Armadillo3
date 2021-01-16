@@ -13,7 +13,6 @@ import {
   FormControlLabel,
   Switch,
   Grid,
-  Container
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import Spinner from "./Spinner";
@@ -170,10 +169,8 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
     </Dialog>
   ) : (
     <>
-    <Container justify="center">
       <Grid container spacing={3}>
-        
-        <Grid item xs={10} >
+        <Grid item xs={10} justify="center">
           <form onSubmit={handleSubmit}>
             <TextField
               id="search_bar"
@@ -262,7 +259,6 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
           </FormControl>
         </Grid>
       </Grid>
-      </Container>
     </>
   );
 };

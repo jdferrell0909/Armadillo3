@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "100vh",
     paddingTop: "15rem",
-    background: "linear-gradient(to right, SlateBlue, Violet)",
+    background: "linear-gradient(to right, #FFFFFF, #B2FEFA)",
   },
   loginBox: {
     width: "100%",
@@ -149,13 +149,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     background: "linear-gradient(to right, #0099F7, #F11712)",
   },
-  infoForm: {
-    padding: "1.5rem 3rem 3rem",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  }
 }));
 
 export default useStyles;
