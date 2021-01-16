@@ -13,13 +13,20 @@ productInfo Object = {
 */
 
 // MAIN Function:
-const getProductInfo = async (url, stores) => {
+const getProductInfo = async (url, stores = {}) => {
   const allPrices = await navUrl(url);
+  console.log(stores);
+
   for (const prop in stores) !stores[prop] ? delete stores[prop] : null;
 
-  let filteredPrices = allPrices.filter((price) => stores.hasOwnProperty(price[0])).filter((price) => price[1] !== '').sort((a, b) => a[1] - b[1]);
+  let filteredPrices;
 
-  filteredPrices = filteredPrices[0];
+  if (Object.keys(stores).length) {
+    filteredPrices = allPrices.filter((price) => stores.hasOwnProperty(price[0])).filter((price) => price[1] !== '').sort((a, b) => a[1] - b[1]);
+    filteredPrices = filteredPrices[0];
+    console.log('hellooooo');
+  }
+
   console.log('filtered', filteredPrices);
 
   const browser = await puppeteer.launch({
@@ -41,7 +48,7 @@ const getProductInfo = async (url, stores) => {
   } else {
     console.log('False');
   }
-  if (filteredPrices.length) {
+  if (filteredPrices) {
     // filteredPrices = [productInfo.store_name, productInfo.lowest_daily_price, productInfo.storeUrl];
     productInfo.lowest_daily_price = await filteredPrices[1].slice(1);
     productInfo.store_name = await filteredPrices[0];
