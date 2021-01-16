@@ -61,7 +61,7 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
     merchants = arr.join(",");
     console.log("merchants", merchants);
     const params = {
-      api_key: "CD73F000ECD64896BF38A4F007A654BA",
+      api_key: "520630145E8E4C3CA085DDECE4DF76FB",
       search_type: "shopping",
       sort_by: "relevance",
       gl: "us",
@@ -79,16 +79,14 @@ const Search = ({ userId, addProduct, startSpinner, getAllProducts }) => {
         const goodUrl = "google.com/shopping/product/";
         console.log(response.data);
         const items = response.data.shopping_results;
-          // .filter((item) => {
-          //   return item.link.includes(goodUrl);
-          // })
-          // .slice(0, 20);
-        items.forEach(
-          (el) => {
-            el.link = "https://www.google.com/shopping/product/" + el.id
-            el.stores = stores
-          }
-        );
+        // .filter((item) => {
+        //   return item.link.includes(goodUrl);
+        // })
+        // .slice(0, 20);
+        items.forEach((el) => {
+          el.link = "https://www.google.com/shopping/product/" + el.id;
+          el.stores = stores;
+        });
         console.log("items: ", items);
         setOpen(true);
 
